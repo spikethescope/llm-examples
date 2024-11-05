@@ -1,0 +1,64 @@
+import streamlit as st
+import os
+import google.generativeai as genai
+
+# Retrieve API key from environment variable
+gemini_api_key = os.getenv('GEMINI_API_KEY', None)
+
+
+# Sidebar with links
+with st.sidebar:
+    st.markdown("[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/1_File_Q%26A.py)")
+    st.markdown("[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)")
+
+st.title("📝 File Q&A with Google Gemini")
+
+# Upload file
+uploaded_file = st.file_uploader("Upload an article", type=("txt", "md"))
+
+# Initialize session state for messages and article content
+if 'messages' not in st.session_state:
+    st.session_state.messages = []
+if 'article' not in st.session_state:
+    st.session_state.article = ""
+
+# Store the uploaded article content
+if uploaded_file:
+    st.session_state.article = uploaded_file.read().decode()
+
+# Check if API key is provided
+if uploaded_file and not gemini_api_key:
+    st.info("Please add your Google Gemini API key to continue.")
+
+
+
+# Form for user input
+with st.form(key="chat_form"):
+    user_input = st.text_area("Enter your message", height=100, placeholder="Type your message here...")
+    submitted = st.form_submit_button("Send")
+
+    if submitted and user_input and uploaded_file and gemini_api_key:
+        # Set up the Google Gemini client
+        genai.configure(api_key=gemini_api_key)
+        # Create a model instance
+        model = genai.GenerativeModel("gemini-1.0-pro")
+
+        # Create a prompt with conversation history
+        prompt = f"Here's an article:\n\n{st.session_state.article}\n\n"
+        for msg in st.session_state.messages:
+            prompt += f"{msg['role']}: {msg['content']}\n"
+        prompt += f"User: {user_input}\nAI:"
+
+        # Generate content using the new model instance
+        response = model.generate_content(prompt)
+        ai_response = response.text
+        #st.markdown(ai_response)
+        # Store user question and AI response in session state messages
+        st.session_state.messages.append({"role": "user", "content": user_input})
+        st.session_state.messages.append({"role": "AI", "content": ai_response})
+        for msg in st.session_state.messages:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
+# Ensure the session state for user input is initialized
+if 'user_input' not in st.session_state:
+    st.session_state.user_input = ""
