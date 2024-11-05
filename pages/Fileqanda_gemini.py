@@ -17,7 +17,7 @@ if uploaded_file.type == "application/pdf":
         for page in reader.pages:
             text.append(page.extract_text())
         st.session_state.article = "\n".join(text)
-    else:
+else:
         # Handle other file types (e.g., txt, md)
         st.session_state.article = uploaded_file.read().decode()
         
