@@ -18,9 +18,9 @@ if uploaded_file is not None:
         for page in reader.pages:
             text.append(page.extract_text())
         st.session_state.article = "\n".join(text)
-else:
+#else:
         # Handle other file types (e.g., txt, md)
-        st.session_state.article = uploaded_file.read().decode()
+        #st.session_state.article = uploaded_file.read().decode()
         
 question = st.text_input(
     "Ask something about the article",
