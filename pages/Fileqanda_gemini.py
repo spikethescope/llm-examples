@@ -10,6 +10,17 @@ with st.sidebar:
 model = genai.GenerativeModel("gemini-1.0-pro")
 st.title("📝 File Q&A with Google Gemini")
 uploaded_file = st.file_uploader("Upload an article", type=("txt", "md", "pdf"))
+if uploaded_file.type == "application/pdf":
+        # Read and extract text from the PDF
+        reader = PyPDF2.PdfReader(uploaded_file)
+        text = []
+        for page in reader.pages:
+            text.append(page.extract_text())
+        st.session_state.article = "\n".join(text)
+    else:
+        # Handle other file types (e.g., txt, md)
+        st.session_state.article = uploaded_file.read().decode()
+        
 question = st.text_input(
     "Ask something about the article",
     placeholder="Can you give me a short summary?",
