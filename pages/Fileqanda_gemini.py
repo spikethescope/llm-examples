@@ -11,7 +11,7 @@ model = genai.GenerativeModel("gemini-1.0-pro")
 st.title("📝 File Q&A with Google Gemini")
 uploaded_file = st.file_uploader("Upload an article", type=("txt", "md", "pdf"))
 #filename_lower = uploaded_file.name
-if "pdf" in uploaded_file:
+if uploaded_file.type == 'application/pdf':
         # Read and extract text from the PDF
         reader = PyPDF2.PdfReader(uploaded_file)
         text = []
