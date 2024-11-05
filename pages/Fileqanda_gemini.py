@@ -1,7 +1,7 @@
 import streamlit as st
 import google.generativeai as genai
 import os
-from pathlib import Path
+import PyPDF2
 # Sidebar for API key input
 with st.sidebar:
     gemini_api_key = st.text_input("Google Gemini API Key", key="file_qa_api_key", type="password")
