@@ -9,7 +9,7 @@ with st.sidebar:
     st.markdown("[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)")
 model = genai.GenerativeModel("gemini-1.0-pro")
 st.title("📝 File Q&A with Google Gemini")
-uploaded_file = st.file_uploader("Upload an article", type=("txt", "md"))
+uploaded_file = st.file_uploader("Upload an article", type=("txt", "md", "pdf"))
 question = st.text_input(
     "Ask something about the article",
     placeholder="Can you give me a short summary?",
