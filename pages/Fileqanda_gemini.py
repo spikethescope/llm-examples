@@ -14,9 +14,9 @@ uploaded_file = st.file_uploader("Upload an article", type=("txt", "md", "pdf"))
 if uploaded_file is not None:     
         # Read and extract text from the PDF
         reader = PyPDF2.PdfReader(uploaded_file)
-        text = []
+        article = []
         for page in reader.pages:
-            text.append(page.extract_text())
+            article.append(page.extract_text())
         st.session_state.article = "\n".join(text)
 #else:
         # Handle other file types (e.g., txt, md)
@@ -32,7 +32,7 @@ if uploaded_file and question and not gemini_api_key:
     st.info("Please add your Google Gemini API key to continue.")
 
 if uploaded_file and question and gemini_api_key:
-    article = uploaded_file.read().decode()
+    #article = uploaded_file.read().decode()
     
     # Set up the Google Gemini client
     genai.configure(api_key=gemini_api_key)
