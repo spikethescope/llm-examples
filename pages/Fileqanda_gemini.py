@@ -17,7 +17,7 @@ if uploaded_file is not None:
         article = []
         for page in reader.pages:
             article.append(page.extract_text())
-        st.session_state.article = "\n".join(text)
+        st.session_state.article = "\n".join(article)
 #else:
         # Handle other file types (e.g., txt, md)
         #st.session_state.article = uploaded_file.read().decode()
