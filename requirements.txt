@@ -8,3 +8,4 @@ streamlit-feedback
 langchain-community
 google.generativeai
 PyPDF2
+streamlit.echarts
