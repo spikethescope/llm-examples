@@ -4,7 +4,7 @@ import os
 import PyPDF2
 # Sidebar for API key input
 with st.sidebar:
-    gemini_api_key = st.text_input("Google Gemini API Key", key="file_qa_api_key", type="password")
+    gemini_api_key = st.text_input("Enter Google Gemini API Key", key="file_qa_api_key", type="password")
     st.markdown("[View the source code](https://github.com/streamlit/llm-examples/blob/main/pages/1_File_Q%26A.py)")
     st.markdown("[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)")
 model = genai.GenerativeModel("gemini-2.0-flash")
