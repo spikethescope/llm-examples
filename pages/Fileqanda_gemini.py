@@ -41,6 +41,7 @@ if uploaded_file and question and gemini_api_key:
     prompt = f"Here's an article:\n\n{article}\n\n{question}"
 
     # Call the Google Gemini model
+    # Call the Google Gemini model
     response = model.generate_content(prompt)
     
     # Display the response from the model
@@ -48,10 +49,15 @@ if uploaded_file and question and gemini_api_key:
     
     steps = response.text.split('\n')
     
+    def is_mathematical(text):
+        # Check if text contains mathematical symbols or equations
+        math_symbols = ['=', '+', '-', '×', '*', '/', '÷', '±', '∑', '∫', '√', '^', '≠', '≤', '≥', '≈', '∞', '∆', '∂']
+        return any(symbol in text for symbol in math_symbols) or '$' in text or any(char.isdigit() for char in text)
+    
     for step in steps:
         if step.strip():  # Only process non-empty steps
             # Check for important intermediate steps or final answer
-            if any(keyword in step.lower() for keyword in ['therefore', 'result', 'final', 'answer', '=', 'solution']):
+            if any(keyword in step.lower() for keyword in ['therefore', 'result', 'final', 'answer', 'solution']):
                 # Box with grey background for important steps/answers
                 st.markdown(f"""
                 <div style="border:1px solid #d0d0d0; 
@@ -64,22 +70,30 @@ if uploaded_file and question and gemini_api_key:
                 </div>
                 """, unsafe_allow_html=True)
             else:
-                # Format variables and measurements into LaTeX
-                if any(char.isalpha() for char in step) and ('=' in step or ',' in step):
-                    # Convert patterns like "a = 40m" or "a, b, c = 40m, 24m, 32m" to LaTeX
-                    formatted_step = step
-                    # Replace variable assignments
-                    formatted_step = formatted_step.replace("**", "")  # Remove markdown bold syntax
-                    formatted_step = formatted_step.replace(" = ", " &= ")  # For align environment
-                    # Convert variable names and units to LaTeX format
-                    for var in ['a', 'b', 'c', 'x', 'y', 'z', 'n', 'm']:
-                        if f"{var} " in formatted_step or f"{var}=" in formatted_step:
-                            formatted_step = formatted_step.replace(f"{var}", f"\\{var}")
-                    # Add LaTeX formatting
-                    formatted_step = f"\\begin{{align*}}{formatted_step}\\end{{align*}}"
-                    st.latex(formatted_step)
-                elif '$' in step:
-                    st.latex(step.replace('$', ''))
+                # Only apply LaTeX formatting to mathematical content
+                if is_mathematical(step):
+                    # Remove any markdown bold syntax
+                    step = step.replace("**", "")
+                    
+                    if '$' in step:
+                        # If already in LaTeX format, just display it
+                        st.latex(step.replace('$', ''))
+                    else:
+                        # Convert to LaTeX format for mathematical expressions
+                        # Replace common math operators with LaTeX equivalents
+                        formatted_step = step
+                        formatted_step = formatted_step.replace("×", "\\times ")
+                        formatted_step = formatted_step.replace("÷", "\\div ")
+                        formatted_step = formatted_step.replace("√", "\\sqrt")
+                        
+                        # If it's an equation with =, use align* environment
+                        if '=' in formatted_step:
+                            formatted_step = f"\\begin{{align*}}{formatted_step}\\end{{align*}}"
+                        else:
+                            formatted_step = f"$${formatted_step}$$"
+                        
+                        st.latex(formatted_step)
                 else:
+                    # Regular text without mathematical content
                     st.write(step)
     
