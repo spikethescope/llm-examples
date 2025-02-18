@@ -45,54 +45,18 @@ if uploaded_file and question and gemini_api_key:
     prompt = f"Here's an article:\n\n{article}\n\n{question}"
 
     # Call the Google Gemini model
-    # Call the Google Gemini model
     response = model.generate_content(prompt)
-    
+
     # Display the response from the model
     st.write("### Answer")
     
     steps = response.text.split('\n')
     
-    def format_math_expression(text):
-        # Remove markdown bold syntax
-        text = text.replace('**', '')
-        
-        # Replace mathematical symbols with LaTeX equivalents
-        replacements = {
-            '√': '\\sqrt',
-            '×': '\\times',
-            '÷': '\\div',
-            '±': '\\pm',
-            '∞': '\\infty',
-            '≠': '\\neq',
-            '≤': '\\leq',
-            '≥': '\\geq',
-            '≈': '\\approx'
-        }
-        
-        for old, new in replacements.items():
-            text = text.replace(old, new)
-        
-        # Add spacing around equals sign
-        if '=' in text:
-            text = text.replace('=', ' = ')
-        
-        # Wrap in LaTeX delimiters if not already present
-        if not text.startswith('$$'):
-            text = f'$${text}$$'
-        
-        return text
-    
     for step in steps:
         if step.strip():  # Only process non-empty steps
             # Check for important intermediate steps or final answer
+            # by looking for keywords or patterns
             if any(keyword in step.lower() for keyword in ['therefore', 'result', 'final', 'answer', '=', 'solution']):
-                # Format step with LaTeX if it contains mathematical content
-                if any(symbol in step for symbol in ['=', '√', '×', '+', '-', '/', '*', '^']):
-                    formatted_step = format_math_expression(step)
-                else:
-                    formatted_step = step
-                
                 # Box with light blue background for important steps/answers
                 st.markdown(f"""
                 <div style="border:1px solid #acc7ed; 
@@ -101,7 +65,7 @@ if uploaded_file and question and gemini_api_key:
                             margin:10px 0; 
                             background-color:#e6f0ff;
                             color: #000000;">
-                {formatted_step}
+                {step}
                 </div>
                 """, unsafe_allow_html=True)
             else:
@@ -109,6 +73,6 @@ if uploaded_file and question and gemini_api_key:
                 if '$' in step:
                     st.latex(step)
                 else:
-                    st.write(step)              
+                    st.write(step)       
                 
     
