@@ -64,40 +64,16 @@ if uploaded_file and question and gemini_api_key:
                             padding:15px; 
                             border-radius:5px; 
                             margin:10px 0; 
-                            background-color:#f5f5f5;
+                            background-color:#e6f0ff;
                             color: #000000;">
-                {st.latex(step)}
+                {step}
                 </div>
                 """, unsafe_allow_html=True)
             else:
                 # Regular step - no box, but preserve LaTeX formatting if present
                 if '$' in step:
-                    # Only apply LaTeX formatting to mathematical content
-                    if is_mathematical(step):
-                        # Remove any markdown bold syntax
-                        step = step.replace("**", "")
-                        
-                        if '$' in step:
-                            # If already in LaTeX format, just display it
-                            st.latex(step.replace('$', ''))
-                        else:
-                            # Convert to LaTeX format for mathematical expressions
-                            # Replace common math operators with LaTeX equivalents
-                            formatted_step = step
-                            formatted_step = formatted_step.replace("×", "\\times ")
-                            formatted_step = formatted_step.replace("÷", "\\div ")
-                            formatted_step = formatted_step.replace("√", "\\sqrt")
-                            
-                            # If it's an equation with =, use align* environment
-                            if '=' in formatted_step:
-                                formatted_step = f"\\begin{{align*}}{formatted_step}\\end{{align*}}"
-                            else:
-                                formatted_step = f"$${formatted_step}$$"
-                            
-                            st.latex(formatted_step)
+                    st.latex(step)
                 else:
-                    step = step.replace("**", "")
-                    step = step.replace("*", "")
-                    st.write(step)                      
+                    st.write(step)                    
                 
     
