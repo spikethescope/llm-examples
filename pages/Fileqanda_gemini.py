@@ -70,10 +70,6 @@ if uploaded_file and question and gemini_api_key:
                 if '$' in step:
                     st.latex(step)
                 else:
-                    st.write(step)
-                        
-                        st.latex(formatted_step)
-                else:
-                    # Regular text without mathematical content
-                    st.write(step)
+                    st.write(step)                      
+                
     
