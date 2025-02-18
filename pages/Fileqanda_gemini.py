@@ -55,6 +55,7 @@ if uploaded_file and question and gemini_api_key:
     def format_important_step(step):
         # Remove any markdown bold markers
         step = step.replace('**', '')
+        step = step.strip('*')
         # Heuristically check whether the line contains math symbols
         has_math = any(sym in step for sym in ['=', '√', '+', '-', '*', '/', '^'])
         # If it appears to contain math and isn’t already wrapped in LaTeX delimiters, then wrap it.
