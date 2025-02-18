@@ -64,7 +64,7 @@ if uploaded_file and question and gemini_api_key:
                             padding:15px; 
                             border-radius:5px; 
                             margin:10px 0; 
-                            background-color:#e6f0ff;
+                            background-color:#f5f5f5;
                             color: #000000;">
                 {step}
                 </div>
@@ -96,6 +96,8 @@ if uploaded_file and question and gemini_api_key:
                             
                             st.latex(formatted_step)
                 else:
+                    step = step.replace("**", "")
+                    step = step.replace("*", "")
                     st.write(step)                      
                 
     
