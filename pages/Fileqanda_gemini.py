@@ -52,12 +52,20 @@ if uploaded_file and question and gemini_api_key:
     # Display each step in a separate box with LaTeX formatting
     for i, step in enumerate(steps, 1):
         if step.strip():  # Only process non-empty steps
-            st.markdown(f"""
-            <div style="border:1px solid #e1e4e8; padding:10px; border-radius:5px; margin:10px 0; background-color:#f6f8fa;">
-            <strong>Step {i}:</strong><br>
-            $$\\begin{aligned}
-            {step}
-            \\end{aligned}$$
-            </div>
-            """, unsafe_allow_html=True)
+            if step.startswith('$'):  # Mathematical expression
+                st.markdown(f"""
+                <div style="border:1px solid #dce6ff; padding:10px; border-radius:5px; margin:10px 0; background-color:#f0f5ff;">
+                <strong>Equation {i}:</strong><br>
+                $$\\begin{aligned}
+                {step}
+                \\end{aligned}$$
+                </div>
+                """, unsafe_allow_html=True)
+            else:  # Regular text
+                st.markdown(f"""
+                <div style="border:1px solid #e1e4e8; padding:10px; border-radius:5px; margin:10px 0; background-color:#f6f8fa;">
+                <strong>Step {i}:</strong><br>
+                {step}
+                </div>
+                """, unsafe_allow_html=True)
     
