@@ -66,7 +66,7 @@ if uploaded_file and question and gemini_api_key:
                             margin:10px 0; 
                             background-color:#f5f5f5;
                             color: #000000;">
-                {step}
+                {st.latex(step)}
                 </div>
                 """, unsafe_allow_html=True)
             else:
