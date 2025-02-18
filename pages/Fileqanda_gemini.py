@@ -49,21 +49,30 @@ if uploaded_file and question and gemini_api_key:
     # Split response into steps if it contains multiple parts
     steps = response.text.split('\n')
     
-    # Display each step in a separate box with LaTeX formatting
+    # Display each step in a separate box
     for i, step in enumerate(steps, 1):
         if step.strip():  # Only process non-empty steps
-            if step.startswith('$'):  # Mathematical expression
+            if '$' in step:  # Contains mathematical expression
+                formatted_step = step.replace('$', '$$')  # Convert inline math to display math
                 st.markdown(f"""
-                <div style="border:1px solid #dce6ff; padding:10px; border-radius:5px; margin:10px 0; background-color:#f0f5ff;">
-                <strong>Equation {i}:</strong><br>
-                $$\\begin{aligned}
-                {step}
-                \\end{aligned}$$
+                <div style="border:1px solid #dce6ff; 
+                            padding:15px; 
+                            border-radius:5px; 
+                            margin:10px 0; 
+                            background-color:#f0f5ff;
+                            color: #000000;">
+                <strong>Step {i}:</strong><br>
+                {formatted_step}
                 </div>
                 """, unsafe_allow_html=True)
             else:  # Regular text
                 st.markdown(f"""
-                <div style="border:1px solid #e1e4e8; padding:10px; border-radius:5px; margin:10px 0; background-color:#f6f8fa;">
+                <div style="border:1px solid #e1e4e8; 
+                            padding:15px; 
+                            border-radius:5px; 
+                            margin:10px 0; 
+                            background-color:#f9f9f9;
+                            color: #000000;">
                 <strong>Step {i}:</strong><br>
                 {step}
                 </div>
