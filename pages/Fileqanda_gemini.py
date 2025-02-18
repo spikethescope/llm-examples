@@ -2,6 +2,9 @@ import streamlit as st
 import google.generativeai as genai
 import os
 import PyPDF2
+if "conversation" not in st.session_state:
+    st.session_state.conversation = []
+
 # Sidebar for API key input
 with st.sidebar:
     gemini_api_key = st.text_input("Enter Google Gemini API Key", key="file_qa_api_key", type="password")
@@ -44,7 +47,15 @@ if uploaded_file and question and gemini_api_key:
     genai.configure(api_key=gemini_api_key)
     
     # Create a prompt for the model
-    prompt = f"Here's an article:\n\n{article}\n\n{question}"
+    prompt = f"Here's an article:\n\n{article}\n\n answer this question: {question}"
+    # Add user's message to conversation history
+    st.session_state.conversation.append({"role": "user", "content": prompt})
+    
+    # Call the Google Gemini model
+    response = model.generate_content(prompt)
+    
+    # Add model's full response to conversation history
+    st.session_state.conversation.append({"role": "assistant", "content": response.text})
 
     # Call the Google Gemini model
     response = model.generate_content(prompt)
