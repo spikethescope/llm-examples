@@ -52,7 +52,7 @@ if uploaded_file and question and gemini_api_key:
     def is_mathematical(text):
         # Check if text contains mathematical symbols or equations
         math_symbols = ['=', '+', '-', '×', '*', '/', '÷', '±', '∑', '∫', '√', '^', '≠', '≤', '≥', '≈', '∞', '∆', '∂']
-        return any(symbol in text for symbol in math_symbols) or '$' in text or any(char.isdigit() for char in text)
+        return any(symbol in text for symbol in math_symbols) in text or any(char.isdigit() for char in text)
     
     for step in steps:
         if step.strip():  # Only process non-empty steps
