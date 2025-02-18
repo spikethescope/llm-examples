@@ -49,48 +49,28 @@ if uploaded_file and question and gemini_api_key:
     
     steps = response.text.split('\n')
     
-    def is_mathematical(text):
-        # Check if text contains mathematical symbols or equations
-        math_symbols = ['=', '+', '-', '×', '*', '/', '÷', '±', '∑', '∫', '√', '^', '≠', '≤', '≥', '≈', '∞', '∆', '∂']
-        return any(symbol in text for symbol in math_symbols) or any(char.isdigit() for char in text)
-    
     for step in steps:
         if step.strip():  # Only process non-empty steps
             # Check for important intermediate steps or final answer
-            if any(keyword in step.lower() for keyword in ['therefore', 'result', 'final', 'answer', 'solution']):
-                # Box with grey background for important steps/answers
+            # by looking for keywords or patterns
+            if any(keyword in step.lower() for keyword in ['therefore', 'result', 'final', 'answer', '=', 'solution']):
+                # Box with light blue background for important steps/answers
                 st.markdown(f"""
-                <div style="border:1px solid #d0d0d0; 
+                <div style="border:1px solid #acc7ed; 
                             padding:15px; 
                             border-radius:5px; 
                             margin:10px 0; 
-                            background-color:#f5f5f5;
+                            background-color:#e6f0ff;
                             color: #000000;">
                 {step}
                 </div>
                 """, unsafe_allow_html=True)
             else:
-                # Only apply LaTeX formatting to mathematical content
-                if is_mathematical(step):
-                    # Remove any markdown bold syntax
-                    step = step.replace("**", "")
-                    
-                    if '$' in step:
-                        # If already in LaTeX format, just display it
-                        st.latex(step.replace('$', ''))
-                    else:
-                        # Convert to LaTeX format for mathematical expressions
-                        # Replace common math operators with LaTeX equivalents
-                        formatted_step = step
-                        formatted_step = formatted_step.replace("×", "\\times ")
-                        formatted_step = formatted_step.replace("÷", "\\div ")
-                        formatted_step = formatted_step.replace("√", "\\sqrt")
-                        
-                        # If it's an equation with =, use align* environment
-                        if '=' in formatted_step:
-                            formatted_step = f"\\begin{{align*}}{formatted_step}\\end{{align*}}"
-                        else:
-                            formatted_step = f"$${formatted_step}$$"
+                # Regular step - no box, but preserve LaTeX formatting if present
+                if '$' in step:
+                    st.latex(step)
+                else:
+                    st.write(step)
                         
                         st.latex(formatted_step)
                 else:
