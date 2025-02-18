@@ -51,28 +51,36 @@ if uploaded_file and question and gemini_api_key:
     st.write("### Answer")
     
     steps = response.text.split('\n')
+
+    def format_important_step(step):
+        # Remove any markdown bold markers
+        step = step.replace('**', '')
+        # Heuristically check whether the line contains math symbols
+        has_math = any(sym in step for sym in ['=', '√', '+', '-', '*', '/', '^'])
+        # If it appears to contain math and isn’t already wrapped in LaTeX delimiters, then wrap it.
+        if has_math and "" not in step: step = "" + step + "$$"
+        return step
     
     for step in steps:
-        if step.strip():  # Only process non-empty steps
-            # Check for important intermediate steps or final answer
-            # by looking for keywords or patterns
-            if any(keyword in step.lower() for keyword in ['therefore', 'result', 'final', 'answer', '=', 'solution']):
-                # Box with light blue background for important steps/answers
-                st.markdown(f"""
-                <div style="border:1px solid #acc7ed; 
-                            padding:15px; 
-                            border-radius:5px; 
-                            margin:10px 0; 
-                            background-color:#e6f0ff;
-                            color: #000000;">
-                {step}
-                </div>
-                """, unsafe_allow_html=True)
-            else:
-                # Regular step - no box, but preserve LaTeX formatting if present
-                if '$' in step:
-                    st.latex(step)
-                else:
-                    st.write(step)       
-                
+    if step.strip(): # Only process non-empty lines
+        # If the step is an important/final step (detected by key phrases)
+        if any(keyword in step.lower() for keyword in ['therefore', 'result', 'final', 'answer', '=', 'solution']):
+        formatted_step = format_important_step(step)
+         # Display the important step in a box (grey background) using st.markdown with unsafe_allow_html
+        st.markdown(f"""
+        <div style="border:1px solid #d0d0d0; 
+                    padding:15px; 
+                    border-radius:5px; 
+                    margin:10px 0; 
+                    background-color:#f5f5f5;
+                    color: #000000;">
+        {formatted_step}
+        </div>
+        """, unsafe_allow_html=True)
+    else:
+        # For regular steps: if the step contains a '$', assume it is a LaTeX expression and use st.latex
+        if '$' in step:
+            st.latex(step.replace('$', ''))
+        else:
+            st.write(step)
     
