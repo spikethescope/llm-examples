@@ -32,7 +32,7 @@ if uploaded_file and question and not gemini_api_key:
     st.info("Please add your Google Gemini API key to continue.")
 def is_mathematical(text):
     # Check if text contains mathematical symbols or equations
-    math_symbols = ['=', '+', '-', '×', '*', '/', '÷', '±', '∑', '∫', '√', '^', '≠', '≤', '≥', '≈', '∞', '∆', '∂']
+    math_symbols = ['=', '+', '-', '×', '*', '* ', '/', '÷', '±', '∑', '∫', '√', '^', '≠', '≤', '≥', '≈', '∞', '∆', '∂']
     return any(symbol in text for symbol in math_symbols) or '$' in text or any(char.isdigit() for char in text)
     
 if uploaded_file and question and gemini_api_key:
