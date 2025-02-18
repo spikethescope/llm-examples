@@ -46,35 +46,28 @@ if uploaded_file and question and gemini_api_key:
     # Display the response from the model
     st.write("### Answer")
     
-    # Split response into steps if it contains multiple parts
     steps = response.text.split('\n')
     
-    # Display each step in a separate box
-    for i, step in enumerate(steps, 1):
+    for step in steps:
         if step.strip():  # Only process non-empty steps
-            if '$' in step:  # Contains mathematical expression
-                formatted_step = step.replace('$', '$$')  # Convert inline math to display math
+            # Check for important intermediate steps or final answer
+            # by looking for keywords or patterns
+            if any(keyword in step.lower() for keyword in ['therefore', 'result', 'final', 'answer', '=', 'solution']):
+                # Box with light blue background for important steps/answers
                 st.markdown(f"""
-                <div style="border:1px solid #dce6ff; 
+                <div style="border:1px solid #acc7ed; 
                             padding:15px; 
                             border-radius:5px; 
                             margin:10px 0; 
-                            background-color:#f0f5ff;
+                            background-color:#e6f0ff;
                             color: #000000;">
-                <strong>Step {i}:</strong><br>
-                {formatted_step}
-                </div>
-                """, unsafe_allow_html=True)
-            else:  # Regular text
-                st.markdown(f"""
-                <div style="border:1px solid #e1e4e8; 
-                            padding:15px; 
-                            border-radius:5px; 
-                            margin:10px 0; 
-                            background-color:#f9f9f9;
-                            color: #000000;">
-                <strong>Step {i}:</strong><br>
                 {step}
                 </div>
                 """, unsafe_allow_html=True)
+            else:
+                # Regular step - no box, but preserve LaTeX formatting if present
+                if '$' in step:
+                    st.latex(step)
+                else:
+                    st.write(step)    
     
