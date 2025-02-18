@@ -6,9 +6,9 @@ if "conversation" not in st.session_state:
     st.session_state.conversation = []
 
 # Sidebar for API key input
-with st.sidebar:
+#with st.sidebar:
     #gemini_api_key = st.text_input("Enter Google Gemini API Key", key="file_qa_api_key", type="password")
-    st.markdown("[View the source code](https://github.com/spikethescope/llm-examples/blob/main/pages/Fileqanda_gemini.py)")
+st.markdown("[View the source code](https://github.com/spikethescope/llm-examples/blob/main/pages/Fileqanda_gemini.py)")
     #st.markdown("[![Open in GitHub Codespaces](https://github.com/codespaces/badge.svg)](https://codespaces.new/streamlit/llm-examples?quickstart=1)")
 model = genai.GenerativeModel("gemini-2.0-flash-thinking-exp-01-21")
 gemini_api_key = os.environ.get("GEMINI_API_KEY")
